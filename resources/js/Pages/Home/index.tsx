@@ -5,7 +5,9 @@ import { GiPayMoney } from "react-icons/gi";
 import { KpiTeste } from "@/Components/Kpis";
 
 
-const Home = ({ auth }: PageProps) => {
+const Home = ({ auth }: PageProps, {sales}: any) => {
+  console.log(sales);
+  
   return (
     <AuthenticatedLayout>
     <Head title="Dashboard" />

@@ -24,14 +24,14 @@ class JsonToDatabaseController extends Controller
                     "password" => Hash::make($user['password']),
                     "roles" => $user['roles'],
                 ];
-                if (!$existuser) {
-                    User::insert($data);
-                }
+            }
+            if (!$existuser) {
+                User::insert($data);
             }
         }
         if ($requser["type"] === "sale") {
             foreach ($requser["dbdata"] as $sale) {
-                $existsale = Sale::where('company_id', $sale['cnpj'])->exists();
+                $existsale = Sale::where('dtfat', $sale['data'])->exists();
                 $data[] = [
                     "company_id" => $sale['cnpj'],
                     "faturamento" => $sale['faturamento'],
@@ -40,10 +40,10 @@ class JsonToDatabaseController extends Controller
                     "margem" => $sale['margem'],
                     "dtfat" => $sale['data'],
                 ];
-                // dd(($existsale));
-                if (!$existsale) {
-                    Sale::insert($data);
-                }
+            }
+            // dd(($existsale));
+            if (!$existsale) {
+                Sale::insert($data);
             }
         }
 
