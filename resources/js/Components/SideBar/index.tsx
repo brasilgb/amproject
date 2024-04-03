@@ -11,8 +11,8 @@ const SideBar = () => {
     return (
         <aside className={`${openSide ? "md:w-72 " : "w-20"} h-full relative bg-sky-800 duration-500 px-4`}>
 
-            <div className={`${openSide ? "rotate-180 " : "0"} duration-300 absolute cursor-pointer flex items-center justify-center -right-2 w-6 h-6 rounded-full bg-white top-16 `}>
-                <IoChevronForward onClick={() => setOpenSide(!openSide)} />
+            <div onClick={() => setOpenSide(!openSide)} className={`${openSide ? "rotate-180 " : "0"} duration-300 absolute cursor-pointer flex items-center justify-center -right-2 w-6 h-6 rounded-full bg-white top-16 shadow-md`}>
+                <IoChevronForward />
             </div>
 
             <div className={`h-20 ${openSide ? "flex items-center justify-start" : "flex flex-col items-start justify-center pt-4"} `}>

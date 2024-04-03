@@ -1,12 +1,19 @@
-import React from 'react'
+import Profile from "../Profile"
 
-type Props = {}
-
-const Header = (props: Props) => {
+const Header = () => {
     return (
-        <div className='bg-gray-50'>
-            Header
-        </div>
+        <header className="bg-gray-50">
+            <div className="px-6 py-4 mx-auto">
+                <div className="flex items-center justify-between">
+                    <div>
+                        55
+                    </div>
+                    <div>
+                        <Profile/>
+                    </div>
+                </div>
+            </div>
+        </header>
     )
 }
 
