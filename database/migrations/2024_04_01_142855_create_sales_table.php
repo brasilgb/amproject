@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
-            $table->string('company_id');
+            $table->string('company_id')->nullable()->index();
             $table->string('faturamento');
             $table->string('meta');
             $table->string('repfat');

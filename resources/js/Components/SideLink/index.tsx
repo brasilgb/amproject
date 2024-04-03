@@ -1,5 +1,4 @@
 import { Link } from '@inertiajs/react'
-import React from 'react'
 
 interface LinkProps {
     url?: any;
@@ -13,7 +12,7 @@ const SideLink = (props: LinkProps) => {
         <li>
             <Link
                 className={`flex items-center px-3.5 py-2 text-sm font-medium gap-2 rounded-md
-                ${props.active ? "bg-white text-blue-700" : "text-white"}`}
+                ${props.active ? "bg-white text-gray-800" : "text-white"}`}
                 href={props.url}
             >
                 <div>

@@ -15,12 +15,12 @@ interface LayoutProps {
 
 const Authenticated = ({ children }: LayoutProps) => {
     return (
-        <main className="bg-gray-100">
+        <main className="bg-slate-200">
             <div className='flex'>
                 <div>
                     <SideBar/>
                 </div>
-                <div className='min-h-screen flex flex-1 flex-col bg-slate-100'>
+                <div className='min-h-screen flex flex-1 flex-col'>
                     <Header />
                     <div className='flex-grow'>
                         {children}

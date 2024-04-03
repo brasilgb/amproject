@@ -21,10 +21,10 @@ const Profile = () => {
                     onClick={toggle}
                 >
                     <div className="text-gray-700">
-                        <IoPerson color="#F6F5FA" size={20} />
+                        <IoPerson  size={20} />
                     </div>
                     <div className="text-gray-700">
-                        <MdOutlineKeyboardArrowDown color="#F6F5FA" size={20} className={`duration-300 ${isOpen ? '-rotate-180' : 'rotate-0'}`} />
+                        <MdOutlineKeyboardArrowDown size={20} className={`duration-300 ${isOpen ? '-rotate-180' : 'rotate-0'}`} />
                     </div>
                 </button>
                 <div
@@ -34,7 +34,7 @@ const Profile = () => {
                         className="text-sm text-gray-600 px-4 pb-3 flex items-center"
                     >
                         <IoMdUnlock color="#6d6a6a" size={20} />
-                        <span className="ml-1">Usuério</span>
+                        <span className="ml-1">Usuário</span>
                     </span>
                     <span className="w-full border-b border-gray-200"></span>
                     <Link
