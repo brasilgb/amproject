@@ -5,24 +5,25 @@ import SideLink from '../SideLink';
 import { LiaCashRegisterSolid } from 'react-icons/lia';
 import { GiReceiveMoney } from 'react-icons/gi';
 import ApplicationLogo from '../ApplicationLogo';
-import { MdOutlineKeyboardArrowDown } from "react-icons/md";
+import { MdOutlineKeyboardArrowDown, MdOutlineKeyboardArrowRight } from "react-icons/md";
 
 const SideBar = () => {
     const [openSide, setOpenSide] = useState(true);
-    const [dropdowOpen, setDropdowOpen] = useState(true);
+    const [dropdowOpen, setDropdowOpen] = useState(false);
     return (
-        <aside className={`${openSide ? "md:w-72 " : "w-20"} h-full relative bg-sky-800 duration-500 px-4 shadow-lg`}>
+        <aside className={`${openSide ? "md:w-72 " : "w-20"} h-full relative bg-sky-800 duration-300 p-5 pt-8 shadow-lg`}>
 
-            <div onClick={() => setOpenSide(!openSide)} className={`${openSide ? "rotate-180 " : "0"} duration-300 absolute cursor-pointer flex items-center justify-center -right-2 w-6 h-6 rounded-full bg-white top-16 shadow-sm`}>
+            <div onClick={() => setOpenSide(!openSide)} className={`${openSide ? "rotate-180 " : "0"} duration-300 absolute cursor-pointer flex items-center justify-center -right-2 w-7 h-7 rounded-full bg-white top-16 shadow-sm border-2 border-sky-800 text-sky-800 `}>
                 <IoChevronForward />
             </div>
 
-            <div className={`h-20 ${openSide ? "flex items-center justify-start" : "flex flex-col items-start justify-center pt-4"} `}>
-                <div className="flex flex-col items-center justify-center rounded p-0.5 bg-white">
-                    <ApplicationLogo width={`${openSide ? "w-16" : "w-10"} duration-500`} />
-                </div>
-                <div>
-                    <h1 className={`ml-2 text-lg text-white font-bold witespace-pre duration-500 ${!openSide && "opacity-0 translate-x-28 overflow-hidden"}`}>Empresa</h1>
+            {/* <div className={`${openSide ? "flex items-center justify-start" : "flex flex-col items-start justify-center pt-4"} `}> */}
+            <div className={``}>
+                <div className="flex items-center gap-x-4">
+                    <img src="/logo/automahost.png" alt="Logo" className='w-10' />
+                    {/* <ApplicationLogo width={`${openSide ? "w-16" : "w-10"} duration-500`} /> */}
+
+                    <h1 className={`text-xl text-white font-bold duration-300 origin-left ${!openSide && "scale-0"}`}>Empresa</h1>
                 </div>
 
             </div>
@@ -41,24 +42,44 @@ const SideBar = () => {
                     active={route().current('sales')}
                     label="Vendas"
                 />
-                <li className="relative">
-                    <div className={`flex items-center px-3.5 py-2 text-sm font-medium gap-2 rounded-t-md w-full cursor-pointer ${dropdowOpen ? "bg-white text-gray-500" : "text-white"}`} onClick={() => setDropdowOpen(!dropdowOpen)}>
+                <li className="">
+                    <div className={`flex items-center p-2 text-base font-medium gap-2 rounded-t-md w-full cursor-pointer hover:rounded-t-md  ${dropdowOpen ? "bg-white text-gray-700 border-b" : "text-white"}`} onClick={() => setDropdowOpen(!dropdowOpen)}>
                         <div>
                             <IoCog size={22} />
                         </div>
-                        <div className={`flex-1 witespace-pre duration-500 ${!openSide && "opacity-0 translate-x-28 overflow-hidden"}`}>Configurações</div>
-                        <div className={`witespace-pre duration-500 ${!openSide && "opacity-0 translate-x-28 overflow-hidden"}`}>
-                            <MdOutlineKeyboardArrowDown size={22} className={`duration-300 ${dropdowOpen ? '-rotate-180' : 'rotate-0'}`} />
+                        <div className={`flex-1 witespace-pre duration-500 ${!openSide && "hidden"}`}>Configurações</div>
+                        <div className={`witespace-pre duration-500 ${!openSide && "hidden"}`}>
+                            <MdOutlineKeyboardArrowDown size={22} className={`duration-300 ${!dropdowOpen ? '-rotate-180' : 'rotate-0'}`} />
                         </div>
                     </div>
                     {dropdowOpen &&
-                        <div className="absolute bg-white opacity-50 flex items-center pl-5 py-2">
-                            <ul>
-                                <li>
+                        <div className={`text-gray-600 ${!openSide && 'absolute rounded-r-md'} rounded-b-md ${!dropdowOpen ? 'w-full' : 'w-[248px]'} bg-white flex items-center pl-5 `}>
+                            <ul className='w-full'>
+                                <li className='w-full py-2 flex items-center '>
+                                    <MdOutlineKeyboardArrowRight size={20} />
                                     <Link
+                                        className='block hover:underline origin-left text-base'
                                         href="/empresa"
                                     >
-                                        Empresa
+                                        Dados da empresa
+                                    </Link>
+                                </li>
+                                <li className='w-full py-2 flex items-center '>
+                                    <MdOutlineKeyboardArrowRight size={20} />
+                                    <Link
+                                        className='block hover:underline origin-left text-base'
+                                        href="/empresa"
+                                    >
+                                        Usuários
+                                    </Link>
+                                </li>
+                                <li className='w-full py-2 flex items-center '>
+                                    <MdOutlineKeyboardArrowRight size={20} />
+                                    <Link
+                                        className='block hover:underline origin-left text-base'
+                                        href="/empresa"
+                                    >
+                                        Aparência
                                     </Link>
                                 </li>
                             </ul>

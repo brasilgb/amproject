@@ -11,14 +11,14 @@ const SideLink = (props: LinkProps) => {
     return (
         <li>
             <Link
-                className={`flex items-center px-3.5 py-2 text-sm font-medium gap-2 rounded-md
+                className={`flex items-center p-2 text-base font-medium gap-x-2 rounded-md hover:bg-white hover:bg-opacity-40
                 ${props.active ? "bg-white text-gray-800" : "text-white"}`}
                 href={props.url}
             >
                 <div>
                     {props.icon}
                 </div>
-                <div className={`witespace-pre duration-500 ${!props.openSide && "opacity-0 translate-x-28 overflow-hidden"}`}>{props.label}</div>
+                <div className={`${!props.openSide && "hidden"} origin-left duration-300`}>{props.label}</div>
             </Link>
         </li>
     )

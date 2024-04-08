@@ -1,13 +1,8 @@
-import ApplicationLogo from '@/Components/ApplicationLogo';
-import Dropdown from '@/Components/Dropdown';
-import NavLink from '@/Components/NavLink';
-import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
-import { Link } from '@inertiajs/react';
-import { User } from '@/types';
-import { PropsWithChildren, ReactNode } from 'react';
+import { ReactNode } from 'react';
 import Footer from '@/Components/Footer';
 import Header from '@/Components/Header';
 import SideBar from '@/Components/SideBar';
+import 'animate.css';
 
 interface LayoutProps {
     children: ReactNode;

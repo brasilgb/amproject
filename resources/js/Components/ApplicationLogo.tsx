@@ -4,8 +4,8 @@ interface LogoProps {
 }
  const ApplicationLogo = ({width}: LogoProps) => {
     return (
-        <div className={width}>
-            <img src="logo/default.png" alt="Logo" />
+        <div className={`${width} flex items-center justify-center`}>
+            <img src="logo/automahost.png" alt="Logo" />
         </div>
     );
 }

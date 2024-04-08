@@ -1,11 +1,13 @@
-import { Link } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 import { useState } from "react";
 import { IoMdUnlock } from "react-icons/io";
 import { IoExit, IoPerson } from 'react-icons/io5';
 import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
 
 const Profile = () => {
-    // const { signOut, user } = useAuthContext();
+    const { auth } = usePage().props as any;
+    console.log(auth?.user?.name);
+    
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
     const toggle = () => {
@@ -21,7 +23,7 @@ const Profile = () => {
                     onClick={toggle}
                 >
                     <div className="text-gray-700">
-                        <IoPerson  size={20} />
+                        <IoPerson size={20} />
                     </div>
                     <div className="text-gray-700">
                         <MdOutlineKeyboardArrowDown size={20} className={`duration-300 ${isOpen ? '-rotate-180' : 'rotate-0'}`} />
@@ -34,7 +36,7 @@ const Profile = () => {
                         className="text-sm text-gray-600 px-4 pb-3 flex items-center"
                     >
                         <IoMdUnlock color="#6d6a6a" size={20} />
-                        <span className="ml-1">Usuário</span>
+                        <span className="ml-1">{auth?.user?.name}</span>
                     </span>
                     <span className="w-full border-b border-gray-200"></span>
                     <Link
@@ -45,13 +47,15 @@ const Profile = () => {
                         <IoPerson color="#6d6a6a" size={20} />
                         <span className="ml-1">Profile</span>
                     </Link>
-                    <button
+                    <Link
+                        href={route('logout')}
+                        method="post"
+                        as="button"
                         className="text-gray-600 hover:text-gray-400 px-4 pt-2 flex items-center"
-                        // onClick={signOut}
                     >
                         <IoExit color="#6d6a6a" size={20} />
                         <span className="ml-1">Sair</span>
-                    </button>
+                    </Link>
 
                 </div>
             </div>
