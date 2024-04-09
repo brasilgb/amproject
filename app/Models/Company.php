@@ -4,11 +4,12 @@ namespace App\Models;
 
 use App\Traits\TenantAttributeTrait;
 use App\Traits\TenantScoped;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Company extends Model
 {
-    use TenantAttributeTrait, TenantScoped;
+    use HasFactory;
 
     protected $fillable = [
         'cnpj',
