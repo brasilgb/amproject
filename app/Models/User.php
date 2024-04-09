@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Models\Traits\Tenantable;
 use App\Traits\TenantAttributeTrait;
 use App\Traits\TenantScoped;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,7 +13,7 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use HasFactory , Notifiable;
+    use HasFactory , Notifiable, Tenantable;
 
     /**
      * The attributes that are mass assignable.
