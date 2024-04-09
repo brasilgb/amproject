@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { IoCaretForward, IoChevronForward, IoCog, IoHome } from "react-icons/io5";
+import { IoCaretForward, IoChevronForward, IoCog, IoHome, IoPeople } from "react-icons/io5";
 import React, { useState } from 'react'
 import SideLink from '../SideLink';
 import { LiaCashRegisterSolid } from 'react-icons/lia';
@@ -34,6 +34,13 @@ const SideBar = () => {
                     openSide={openSide}
                     active={route().current('dashboard')}
                     label="Dashboard"
+                />
+                <SideLink
+                    url={route('customers.index')}
+                    icon={<IoPeople size={22} />}
+                    openSide={openSide}
+                    active={route().current('customers.index')}
+                    label="Clientes"
                 />
                 <SideLink
                     url={route('sales')}
