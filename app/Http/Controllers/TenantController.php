@@ -2,18 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Customer;
+use App\Models\Tenant;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class CustomerController extends Controller
+class TenantController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Inertia::render('Customer/index');
+        $search = $request->get('q');
+
+        $query = Tenant::orderBy('id', 'DESC');
+
+        if ($search) {
+            $query->where('nome', 'like', '%' . $search . '%')
+                ->orWhere('cnpj', 'like', '%' . $search . '%');
+        }
+
+        $tenants = $query->paginate(12);
+        return Inertia::render('Tenant/index', ['tenants' => $tenants]);
     }
 
     /**
@@ -35,7 +45,7 @@ class CustomerController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Customer $customer)
+    public function show(Tenant $tenant)
     {
         //
     }
@@ -43,7 +53,7 @@ class CustomerController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Customer $customer)
+    public function edit(Tenant $tenant)
     {
         //
     }
@@ -51,7 +61,7 @@ class CustomerController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Customer $customer)
+    public function update(Request $request, Tenant $tenant)
     {
         //
     }
@@ -59,7 +69,7 @@ class CustomerController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Customer $customer)
+    public function destroy(Tenant $tenant)
     {
         //
     }

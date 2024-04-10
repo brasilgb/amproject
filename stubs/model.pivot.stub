@@ -3,11 +3,8 @@
 namespace {{ namespace }};
 
 use Illuminate\Database\Eloquent\Relations\Pivot;
-use App\Models\Traits\Tenantable;
 
 class {{ class }} extends Pivot
 {
-    use Tenantable;
-
-    protected $guarded = ['id'];
+    //
 }

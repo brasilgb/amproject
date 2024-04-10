@@ -4,9 +4,11 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { GiPayMoney } from "react-icons/gi";
 import { Kpi } from "@/Components/Kpis";
 import { MoneyptBR, ValuePercent } from "@/Components/Money";
-import { AiOutlineLineChart } from "react-icons/ai";
+import { AiOutlineDashboard, AiOutlineLineChart } from "react-icons/ai";
 import { TbChartHistogram } from "react-icons/tb";
 import { FaMoneyBillTrendUp } from "react-icons/fa6";
+import { HeaderContent, TitleTop } from "@/Components/PageTop";
+import { IoChatboxEllipses } from "react-icons/io5";
 
 
 const Home = ({ sales }: any) => {
@@ -14,8 +16,15 @@ const Home = ({ sales }: any) => {
   return (
     <AuthenticatedLayout>
       <Head title="Dashboard" />
-      <main className='animate__animated animate__fadeIn'>
-        <div className="p-6">
+      <main className='animate__animated animate__fadeIn p-6'>
+        <HeaderContent>
+          <TitleTop>
+            <AiOutlineDashboard size={30} />
+            <span className="ml-2">Dashboard</span>
+          </TitleTop>
+          <TitleTop/>
+        </HeaderContent>
+        <div className="">
           {sales &&
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               <Kpi icon={<GiPayMoney size="50" />} iconcolor="text-green-700" title="Vendas" value={MoneyptBR(sales?.faturamento)} bgcolor="bg-green-200" textcolor="text-green-700" />
