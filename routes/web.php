@@ -5,7 +5,6 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\TenantController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/', function () {

@@ -36,7 +36,7 @@ const Tenant = ({ tenants }: any) => {
                             </CardHeaderContent>
                             <CardHeaderContent>
                                 <AddButton
-                                    url={"/tenants/create"}
+                                    url={route('customers.create')}
                                     label={"Cliente"}
                                 />
                             </CardHeaderContent>
