@@ -7,7 +7,7 @@ import Pagination from "@/Components/Pagination"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/Table"
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import { maskCnpj, maskInscEstadual } from "@/Utils/mask"
-import { Head } from '@inertiajs/react'
+import { Head, usePage } from '@inertiajs/react'
 import moment from "moment"
 import React, { Fragment } from 'react'
 import { IoPeopleSharp } from "react-icons/io5"
@@ -15,6 +15,8 @@ import { IoPeopleSharp } from "react-icons/io5"
 type Props = {}
 
 const Tenant = ({ tenants }: any) => {
+    const { flash } = usePage().props;
+
     return (
         <AuthenticatedLayout>
             <Head title="Dashboard" />
@@ -86,9 +88,9 @@ const Tenant = ({ tenants }: any) => {
                                                         )}
                                                     />
                                                     <DeleteButton
-                                                        url="tenants.destroy"
+                                                        url="customers.destroy"
                                                         param={cliente.id}
-                                                        identify={`o cliente ${cliente.nome}`}
+                                                        identify={`o cliente ${cliente.descricao}`}
                                                     />
                                                 </TableCell>
                                             </TableRow>

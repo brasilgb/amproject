@@ -128,7 +128,6 @@ class TenantController extends Controller
                 'inscricao' => 'inscrição',
             ]
         );
-
         $tenant->update($data);
         Session::flash('success', 'Cliente editado com sucesso!');
         return Redirect::route('customers.index', ['tenant' => $tenant->id]);
@@ -139,6 +138,8 @@ class TenantController extends Controller
      */
     public function destroy(Tenant $tenant)
     {
-        //
+        $tenant->delete();
+        Session::flash('success', 'Cliente deletado com sucesso');
+        return Redirect::route('customers.index');
     }
 }
