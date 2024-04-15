@@ -12,20 +12,17 @@ return new class extends Migration
     {
         Schema::create('tenants', function (Blueprint $table) {
             $table->id();
-            $table->string('cnpj');
-            $table->date('nascimento')->nullable();
-            $table->string('nome', 50);
-            $table->string('email', 50)->nullable();
-            $table->string('cep', 20)->nullable();
-            $table->string('uf', 20)->nullable();
-            $table->string('cidade', 50)->nullable();
-            $table->string('bairro', 50)->nullable();
-            $table->string('endereco', 80)->nullable();
-            $table->string('complemento', 20)->nullable();
+            $table->string('descricao', 50);
+            $table->string('endereco', 80);
+            $table->integer('numero');
+            $table->string('cep', 20);
+            $table->string('municipio', 50);
+            $table->string('uf', 20);
+            $table->string('bairro', 50);
+            $table->string('cnpj', 50);
+            $table->string('inscricao', 50);
             $table->string('telefone', 20);
-            $table->string('contato', 50)->nullable();
-            $table->string('whatsapp', 50)->nullable();
-            $table->string('telcontato', 20)->nullable();
+            $table->string('whatsapp', 20)->nullable();
             $table->text('obs')->nullable();
             $table->timestamps();
         });

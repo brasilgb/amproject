@@ -6,6 +6,7 @@ import { BreadCrumbTop, HeaderContent, TitleTop } from "@/Components/PageTop"
 import Pagination from "@/Components/Pagination"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/Table"
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
+import { maskCnpj, maskInscEstadual } from "@/Utils/mask"
 import { Head } from '@inertiajs/react'
 import moment from "moment"
 import React, { Fragment } from 'react'
@@ -30,8 +31,8 @@ const Tenant = ({ tenants }: any) => {
                         <CardHeader>
                             <CardHeaderContent>
                                 <InputSearch
-                                    placeholder={"Buscar por nome do cliente ou cnpj"}
-                                    url={"tenants.index"}
+                                    placeholder={"Buscar por descrição ou cnpj"}
+                                    url={"customers.index"}
                                 />
                             </CardHeaderContent>
                             <CardHeaderContent>
@@ -47,9 +48,9 @@ const Tenant = ({ tenants }: any) => {
                                 <TableHeader>
                                     <TableRow>
                                         <TableHead>#</TableHead>
-                                        <TableHead>Nome</TableHead>
-                                        <TableHead>E-mail</TableHead>
-                                        <TableHead>CPF</TableHead>
+                                        <TableHead>Descrição</TableHead>
+                                        <TableHead>CNPJ</TableHead>
+                                        <TableHead>Inscrição</TableHead>
                                         <TableHead>Telefone</TableHead>
                                         <TableHead>Cadastro</TableHead>
                                         <TableHead></TableHead>
@@ -61,12 +62,14 @@ const Tenant = ({ tenants }: any) => {
                                             <TableRow>
                                                 <TableCell>{cliente.id}</TableCell>
                                                 <TableCell>
-                                                    {cliente.nome}
+                                                    {cliente.descricao}
                                                 </TableCell>
                                                 <TableCell>
-                                                    {cliente.email}
+                                                    {maskCnpj(cliente.cnpj)}
                                                 </TableCell>
-                                                <TableCell>{cliente.cpf}</TableCell>
+                                                <TableCell>
+                                                    {maskInscEstadual(cliente.inscricao)}
+                                                </TableCell>
                                                 <TableCell>
                                                     {cliente.telefone}
                                                 </TableCell>
@@ -76,15 +79,9 @@ const Tenant = ({ tenants }: any) => {
                                                     ).format("DD/MM/YYYY")}
                                                 </TableCell>
                                                 <TableCell className="flex items-center justify-end gap-2">
-                                                    <AgendaClienteButton
-                                                        url={`/agendas?ac=${cliente.id}`}
-                                                    />
-                                                    <OrderButton
-                                                        url={`/ordens?oc=${cliente.id}`}
-                                                    />
                                                     <EditButton
                                                         url={route(
-                                                            "tenants.edit",
+                                                            "customers.edit",
                                                             cliente.id,
                                                         )}
                                                     />

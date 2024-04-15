@@ -28,6 +28,14 @@ function maskDate(value: string) {
     }
 }
 
+function maskInscEstadual(value: string) {
+    if (value) {
+        value = value.replace(/\D/g, "");
+        value = value.replace(/^(\d{3})(\d{7})/, "$1/$2");
+        return value;
+    }
+}
+
 function maskCpfCnpj(value: string) {
     if (value.length < 12) {
         value = value.replace(/\D/g, "");
@@ -61,4 +69,4 @@ function unMask(value: string) {
     }
 }
 
-export { maskCep, maskPhone, maskDate, maskCpfCnpj, maskCnpj, unMask };
+export { maskCep, maskPhone, maskDate, maskCpfCnpj, maskCnpj, unMask, maskInscEstadual };

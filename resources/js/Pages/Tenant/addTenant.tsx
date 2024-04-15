@@ -2,53 +2,46 @@ import { AddButton, BackButton, SaveButton } from '@/Components/Buttons'
 import { Card, CardBody, CardContainer, CardFooter, CardHeader, CardHeaderContent } from '@/Components/Card'
 import { BreadCrumbTop, HeaderContent, TitleTop } from '@/Components/PageTop'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
-import { maskCep, maskCpfCnpj, unMask } from '@/Utils/mask'
+import { maskCep, maskCpfCnpj, maskInscEstadual, maskPhone, unMask } from '@/Utils/mask'
 import { Head, useForm } from '@inertiajs/react'
 import { IoPeopleSharp } from 'react-icons/io5'
 
-type Props = {}
+const AddCustomer = (tenant: any) => {
 
-const AddCustomer = (props: Props) => {
   const { data, setData, post, progress, processing, errors } = useForm({
-    cnpj: "",
-    nascimento: "",
-    nome: "",
-    email: "",
-    cep: "",
-    uf: "",
-    cidade: "",
-    bairro: "",
+    codigo: tenant.tenant ? tenant.tenant + 1 : 1,
+    descricao: "",
     endereco: "",
-    complemento: "",
+    numero: "",
+    cep: "",
+    municipio: "",
+    uf: "",
+    bairro: "",
+    cnpj: "",
+    inscricao: "",
     telefone: "",
     whatsapp: "",
-    contato: "",
-    telcontato: "",
     obs: "",
   });
 
   function handleSubmit(e: any) {
     e.preventDefault();
-    post(route("clientes.store"));
+    post(route("customers.store"));
   }
 
 
   const getCep = (cep: string) => {
     const cleanCep = unMask(cep);
     fetch(`https://viacep.com.br/ws/${cleanCep}/json/`)
-        .then((response) => response.json())
-        .then((result) => {
-            setData((data) => ({ ...data, uf: result.uf }));
-            setData((data) => ({ ...data, cidade: result.localidade }));
-            setData((data) => ({ ...data, bairro: result.bairro }));
-            setData((data) => ({ ...data, endereco: result.logradouro }));
-            setData((data) => ({
-                ...data,
-                complemento: result.complemento,
-            }));
-        })
-        .catch((error) => console.error(error));
-};
+      .then((response) => response.json())
+      .then((result) => {
+        setData((data) => ({ ...data, uf: result.uf }));
+        setData((data) => ({ ...data, municipio: result.localidade }));
+        setData((data) => ({ ...data, bairro: result.bairro }));
+        setData((data) => ({ ...data, endereco: result.logradouro }));
+      })
+      .catch((error) => console.error(error));
+  };
 
   return (
     <AuthenticatedLayout>
@@ -62,7 +55,7 @@ const AddCustomer = (props: Props) => {
             </TitleTop>
             <BreadCrumbTop
               links={[
-                { url: "/clientes", label: "Clientes" },
+                { url: "/customers", label: "Clientes" },
                 { url: null, label: "Adicionar cliente" },
               ]}
             />
@@ -70,7 +63,7 @@ const AddCustomer = (props: Props) => {
           <CardContainer>
             <CardHeader>
               <CardHeaderContent>
-                <BackButton url={"/clientes"} label={"Voltar"} />
+                <BackButton url={"/customers"} label={"Voltar"} />
               </CardHeaderContent>
               <CardHeaderContent>
                 <></>
@@ -79,97 +72,46 @@ const AddCustomer = (props: Props) => {
             <form onSubmit={handleSubmit} autoComplete="off">
               <CardBody className=" border-y border-gray-100">
                 <div className="px-3 my-4">
-                  <div className="grid grid-cols-6 gap-4">
+                  <div className="grid md:grid-cols-6 gap-4">
                     <div className="flex flex-col">
                       <label
                         className="label-form"
-                        htmlFor="cpf"
+                        htmlFor="codigo"
                       >
-                        CPF/CNPJ
+                        Código
                       </label>
                       <input
-                        id="cpf"
+                        id="codigo"
                         type="text"
-                        value={maskCpfCnpj(data.cnpj)}
-                        onChange={(e) =>
-                          setData("cnpj", e.target.value)
-                        }
+                        value={("00000" + (data.codigo)).slice(-8)}
                         className="input-form"
-                        maxLength={18}
-                      />
-                      {errors.cnpj && (
-                        <div className="text-sm text-red-500">
-                          {errors.cnpj}
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex flex-col">
-                      <label
-                        className="label-form"
-                        htmlFor="nascimento"
-                      >
-                        Nascimento
-                      </label>
-                      <input
-                        id="nascimento"
-                        type="date"
-                        value={data.nascimento}
-                        onChange={(e) =>
-                          setData(
-                            "nascimento",
-                            e.target.value,
-                          )
-                        }
-                        className="input-form"
+                        disabled
                       />
                     </div>
-                    <div className="flex flex-col col-span-2">
-                      <label
-                        className="label-form"
-                        htmlFor="nome"
-                      >
-                        Nome
-                      </label>
-                      <input
-                        id="nome"
-                        type="text"
-                        value={data.nome}
-                        onChange={(e) =>
-                          setData("nome", e.target.value)
-                        }
-                        className="input-form"
-                      />
-                      {errors.nome && (
-                        <div className="text-sm text-red-500">
-                          {errors.nome}
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex flex-col col-span-2">
-                      <label
-                        className="label-form"
-                        htmlFor="email"
-                      >
-                        E-mail
-                      </label>
-                      <input
-                        id="email"
-                        type="text"
-                        value={data.email}
-                        onChange={(e) =>
-                          setData("email", e.target.value)
-                        }
-                        className="input-form"
-                      />
-                      {errors.email && (
-                        <div className="text-red-500">
-                          {errors.email}
-                        </div>
-                      )}
-                    </div>
-                  </div>
 
-                  <div className="grid grid-cols-6 gap-4 mt-6">
+                    <div className="flex flex-col col-span-2">
+                      <label
+                        className="label-form"
+                        htmlFor="descricao"
+                      >
+                        Descrição
+                      </label>
+                      <input
+                        id="descricao"
+                        type="text"
+                        value={data.descricao}
+                        onChange={(e) =>
+                          setData("descricao", e.target.value)
+                        }
+                        className="input-form"
+                      />
+                      {errors.descricao && (
+                        <div className="text-sm text-red-500">
+                          {errors.descricao}
+                        </div>
+                      )}
+                    </div>
+
                     <div className="flex flex-col">
                       <label
                         className="label-form"
@@ -190,7 +132,89 @@ const AddCustomer = (props: Props) => {
                         className="input-form"
                         maxLength={9}
                       />
+                      {errors.cep && (
+                        <div className="text-sm text-red-500">
+                          {errors.cep}
+                        </div>
+                      )}
                     </div>
+
+                    <div className="flex flex-col col-span-2">
+                      <label
+                        className="label-form"
+                        htmlFor="endereco"
+                      >
+                        Endereço
+                      </label>
+                      <input
+                        id="endereco"
+                        type="text"
+                        value={data.endereco}
+                        onChange={(e) =>
+                          setData("endereco", e.target.value)
+                        }
+                        className="input-form"
+                      />
+                      {errors.endereco && (
+                        <div className="text-red-500">
+                          {errors.endereco}
+                        </div>
+                      )}
+                    </div>
+
+
+                  </div>
+
+                  <div className="grid grid-cols-6 gap-4 mt-6">
+                    <div className="flex flex-col">
+                      <label
+                        className="label-form"
+                        htmlFor="numero"
+                      >
+                        Número
+                      </label>
+                      <input
+                        id="numero"
+                        type="text"
+                        value={data.numero}
+                        onChange={(e) =>
+                          setData("numero", e.target.value)
+                        }
+                        className="input-form"
+                      />
+                      {errors.numero && (
+                        <div className="text-sm text-red-500">
+                          {errors.numero}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex flex-col col-span-2">
+                      <label
+                        className="label-form"
+                        htmlFor="municipio"
+                      >
+                        Municipio
+                      </label>
+                      <input
+                        id="municipio"
+                        type="text"
+                        value={data.municipio}
+                        onChange={(e) =>
+                          setData(
+                            "municipio",
+                            e.target.value,
+                          )
+                        }
+                        className="input-form"
+                      />
+                      {errors.municipio && (
+                        <div className="text-sm text-red-500">
+                          {errors.municipio}
+                        </div>
+                      )}
+                    </div>
+
                     <div className="flex flex-col">
                       <label
                         className="label-form"
@@ -207,27 +231,13 @@ const AddCustomer = (props: Props) => {
                         }
                         className="input-form"
                       />
+                      {errors.uf && (
+                        <div className="text-sm text-red-500">
+                          {errors.uf}
+                        </div>
+                      )}
                     </div>
-                    <div className="flex flex-col col-span-2">
-                      <label
-                        className="label-form"
-                        htmlFor="cidade"
-                      >
-                        Cidade
-                      </label>
-                      <input
-                        id="cidade"
-                        type="text"
-                        value={data.cidade}
-                        onChange={(e) =>
-                          setData(
-                            "cidade",
-                            e.target.value,
-                          )
-                        }
-                        className="input-form"
-                      />
-                    </div>
+
                     <div className="flex flex-col col-span-2">
                       <label
                         className="label-form"
@@ -247,53 +257,65 @@ const AddCustomer = (props: Props) => {
                         }
                         className="input-form"
                       />
+                      {errors.bairro && (
+                        <div className="text-sm text-red-500">
+                          {errors.bairro}
+                        </div>
+                      )}
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-4 mt-6">
-                    <div className="flex flex-col col-span-2">
+                  <div className="grid grid-cols-4 gap-4 mt-6">
+                    <div className="flex flex-col">
                       <label
                         className="label-form"
-                        htmlFor="endereco"
+                        htmlFor="cnpj"
                       >
-                        Endereço
+                        CNPJ
                       </label>
                       <input
-                        id="endereco"
+                        id="cnpj"
                         type="text"
-                        value={data.endereco}
+                        value={maskCpfCnpj(data.cnpj)}
                         onChange={(e) =>
-                          setData(
-                            "endereco",
-                            e.target.value,
-                          )
+                          setData("cnpj", e.target.value)
                         }
                         className="input-form"
+                        maxLength={18}
                       />
+                      {errors.cnpj && (
+                        <div className="text-sm text-red-500">
+                          {errors.cnpj}
+                        </div>
+                      )}
                     </div>
                     <div className="flex flex-col">
                       <label
                         className="label-form"
-                        htmlFor="complemento"
+                        htmlFor="inscricao"
                       >
-                        Complemento
+                        Inscrição
                       </label>
                       <input
-                        id="complemento"
+                        id="inscricao"
                         type="text"
-                        value={data.complemento}
+                        value={maskInscEstadual(data.inscricao)}
                         onChange={(e) =>
                           setData(
-                            "complemento",
+                            "inscricao",
                             e.target.value,
                           )
                         }
                         className="input-form"
+                        maxLength={10}
                       />
+                      {errors.inscricao && (
+                        <div className="text-sm text-red-500">
+                          {errors.inscricao}
+                        </div>
+                      )}
                     </div>
-                  </div>
 
-                  <div className="grid grid-cols-5 gap-4 mt-6">
                     <div className="flex flex-col">
                       <label
                         className="label-form"
@@ -304,7 +326,7 @@ const AddCustomer = (props: Props) => {
                       <input
                         id="telefone"
                         type="text"
-                        value={data.telefone}
+                        value={maskPhone(data.telefone)}
                         onChange={(e) =>
                           setData(
                             "telefone",
@@ -324,8 +346,8 @@ const AddCustomer = (props: Props) => {
                       <label
                         className="label-form"
                         htmlFor="whatsapp"
-                      >
-                        Whatsapp(Utilizar número padrão)
+                      >12345678
+                        Whatsapp(Ex.: 5551985471163)
                       </label>
                       <input
                         id="whatsapp"
@@ -339,54 +361,6 @@ const AddCustomer = (props: Props) => {
                         }
                         className="input-form"
                         maxLength={13}
-                        placeholder="5551985471163"
-                      />
-                      {errors.whatsapp && (
-                        <div className="text-sm text-red-500">
-                          {errors.whatsapp}
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="flex flex-col col-span-2">
-                      <label
-                        className="label-form"
-                        htmlFor="contato"
-                      >
-                        Contato
-                      </label>
-                      <input
-                        id="contato"
-                        type="text"
-                        value={data.contato}
-                        onChange={(e) =>
-                          setData(
-                            "contato",
-                            e.target.value,
-                          )
-                        }
-                        className="input-form"
-                      />
-                    </div>
-                    <div className="flex flex-col">
-                      <label
-                        className="label-form"
-                        htmlFor="telcontato"
-                      >
-                        Telefone contato
-                      </label>
-                      <input
-                        id="telcontato"
-                        type="text"
-                        value={data.telcontato}
-                        onChange={(e) =>
-                          setData(
-                            "telcontato",
-                            e.target.value,
-                          )
-                        }
-                        className="input-form"
-                        maxLength={15}
                       />
                     </div>
                   </div>

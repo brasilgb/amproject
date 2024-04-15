@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Tenant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class TenantController extends Controller
@@ -19,7 +21,7 @@ class TenantController extends Controller
         $query = Tenant::orderBy('id', 'DESC');
 
         if ($search) {
-            $query->where('nome', 'like', '%' . $search . '%')
+            $query->where('descricao', 'like', '%' . $search . '%')
                 ->orWhere('cnpj', 'like', '%' . $search . '%');
         }
 
@@ -32,7 +34,8 @@ class TenantController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Tenant/addTenant');
+        $tenant = Tenant::exists() ? Tenant::orderBy('id', 'desc')->first()->id : [];
+        return Inertia::render('Tenant/addTenant', ['tenant' => $tenant]);
     }
 
     /**
@@ -44,27 +47,35 @@ class TenantController extends Controller
 
         $messages = [
             'required' => 'O campo :attribute deve ser preenchido',
-            'email' => 'Endereço de e-mail válido',
-            'cpf_ou_cnpj' => 'CPF ou CNPJ inválido',
-            'unique' => 'CPF ou CNPJ já está em uso',
+            'cnpj' => 'CNPJ inválido',
+            'unique' => 'CNPJ já está em uso',
         ];
         $request->validate(
             [
-                'nome' => 'required',
-                'cpf' => 'nullable|cpf_ou_cnpj|unique:clientes',
-                'email' => 'nullable|email|unique:clientes',
-                'telefone' => 'required'
+                'descricao' => 'required',
+                'endereco' => 'required',
+                'numero' => 'required',
+                'cep' => 'required',
+                'municipio' => 'required',
+                'uf' => 'required',
+                'bairro' => 'required',
+                'cnpj' => 'required|cnpj|unique:tenants',
+                'inscricao' => 'required',
+                'telefone' => 'required',
             ],
             $messages,
             [
-                'nome' => 'nome',
-                'email' => 'e-mail',
+                'descricao' => 'descrição',
+                'endereco' => 'endereço',
+                'numero' => 'número',
+                'municipio' => 'município',
+                'inscricao' => 'inscrição',
             ]
         );
 
         Tenant::create($data);
         Session::flash('success', 'Cliente cadastrado com sucesso!');
-        return redirect()->route('customrs.index');
+        return redirect()->route('customers.index');
     }
 
     /**
@@ -72,7 +83,7 @@ class TenantController extends Controller
      */
     public function show(Tenant $tenant)
     {
-        //
+        return Inertia::render('Tenant/editTenant', ['tenants' => $tenant]);
     }
 
     /**
@@ -80,7 +91,7 @@ class TenantController extends Controller
      */
     public function edit(Tenant $tenant)
     {
-        //
+        return Redirect::route('customers.show', ['tenant' => $tenant->id]);
     }
 
     /**
@@ -88,7 +99,39 @@ class TenantController extends Controller
      */
     public function update(Request $request, Tenant $tenant)
     {
-        //
+        $data = $request->all();
+
+        $messages = [
+            'required' => 'O campo :attribute deve ser preenchido',
+            'cnpj' => 'CNPJ inválido',
+            'unique' => 'CNPJ já está em uso',
+        ];
+        $request->validate(
+            [
+                'descricao' => 'required',
+                'endereco' => 'required',
+                'numero' => 'required',
+                'cep' => 'required',
+                'municipio' => 'required',
+                'uf' => 'required',
+                'bairro' => 'required',
+                'cnpj' => ['required', Rule::unique('tenants')->ignore($tenant->id), 'cnpj'],
+                'inscricao' => 'required|inscricao_estadual_rs',
+                'telefone' => 'required',
+            ],
+            $messages,
+            [
+                'descricao' => 'descrição',
+                'endereco' => 'endereço',
+                'numero' => 'número',
+                'municipio' => 'município',
+                'inscricao' => 'inscrição',
+            ]
+        );
+
+        $tenant->update($data);
+        Session::flash('success', 'Cliente editado com sucesso!');
+        return Redirect::route('customers.index', ['tenant' => $tenant->id]);
     }
 
     /**
