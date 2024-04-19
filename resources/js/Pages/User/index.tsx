@@ -6,6 +6,7 @@ import { BreadCrumbTop, HeaderContent, TitleTop } from "@/Components/PageTop"
 import Pagination from "@/Components/Pagination"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/Components/Table"
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
+import { roleUserByValue } from "@/Utils/functions"
 import { maskCnpj, maskInscEstadual } from "@/Utils/mask"
 import { Head, usePage } from '@inertiajs/react'
 import moment from "moment"
@@ -64,10 +65,10 @@ const User = ({ users }: any) => {
                                                     {user.name}
                                                 </TableCell>
                                                 <TableCell>
-                                                    {maskCnpj(user.email)}
+                                                    {user.email}
                                                 </TableCell>
                                                 <TableCell>
-                                                    {maskInscEstadual(user.role)}
+                                                    {roleUserByValue(user.roles)}
                                                 </TableCell>
                                                 <TableCell>
                                                     {moment(

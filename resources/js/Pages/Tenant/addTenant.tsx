@@ -346,7 +346,7 @@ const AddCustomer = (tenant: any) => {
                       <label
                         className="label-form"
                         htmlFor="whatsapp"
-                      >12345678
+                      >
                         Whatsapp(Ex.: 5551985471163)
                       </label>
                       <input

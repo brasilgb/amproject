@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 
 class UserController extends Controller
@@ -22,7 +27,7 @@ class UserController extends Controller
         }
 
         $users = $query->paginate(12);
-        return Inertia::render('User/index',['users' => $users]);
+        return Inertia::render('User/index', ['users' => $users]);
     }
 
     /**
@@ -30,8 +35,9 @@ class UserController extends Controller
      */
     public function create()
     {
+        $tenants = Tenant::get();
         $users = User::exists() ? User::orderBy('id', 'desc')->first()->id : [];
-        return Inertia::render('User/addUser', ['users' => $users]);
+        return Inertia::render('User/addUser', ['users' => $users, 'tenants' => $tenants]);
     }
 
     /**
@@ -39,7 +45,39 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+        // dd($data);
+        $messages = [
+            'required' => 'O campo :attribute deve ser preenchido',
+            'email' => 'Endereço de e-mail inválido',
+            "unique" => 'E-mail já cadastrado',
+            'confirmed' => 'As senhas não correspondem',
+            'min' => 'As senha deve ter no mínimo :min caracteres',
+        ];
+        $request->validate(
+            [
+                'tenant_id' => 'required',
+                'name' => 'required',
+                'email' => 'required|email|unique:users',
+                'roles' => 'required',
+                'status' => 'required',
+                'password' => ['required', 'min:6', 'confirmed', Rules\Password::defaults()],
+                'password_confirmation' => ['required', 'min:6'],
+            ],
+            $messages,
+            [
+                'tenant_id' => 'cliente',
+                'name' => 'nome',
+                'password' => 'senha',
+                'password_confirmation' => 'repetir a senha',
+                'email' => 'e-mail',
+                'roles' => 'função',
+            ]
+        );
+        $data['password'] = Hash::make($request->password);
+        User::create($data);
+        Session::flash('success', 'Usuário cadastrado com sucesso!');
+        return redirect()->route('users.index');
     }
 
     /**
@@ -69,8 +107,10 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(User $user)
     {
-        //
+        $user->delete();
+        Session::flash('success', 'Usuário deletado com sucesso');
+        return Redirect::route('users.index');
     }
 }

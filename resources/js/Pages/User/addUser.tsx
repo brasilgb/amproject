@@ -2,45 +2,51 @@ import { AddButton, BackButton, SaveButton } from '@/Components/Buttons'
 import { Card, CardBody, CardContainer, CardFooter, CardHeader, CardHeaderContent } from '@/Components/Card'
 import { BreadCrumbTop, HeaderContent, TitleTop } from '@/Components/PageTop'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
+import { roleUser, statusUser } from "@/Utils/dataSelect"
 import { maskCep, maskCpfCnpj, maskInscEstadual, maskPhone, unMask } from '@/Utils/mask'
 import { Head, useForm } from '@inertiajs/react'
-import { IoPeopleSharp } from 'react-icons/io5'
+import { useEffect, useState } from "react"
+import { IoEye, IoEyeOff, IoPeopleSharp } from 'react-icons/io5'
 
-const addUser = (tenant: any) => {
+const addUser = (tenants: any) => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword2, setShowPassword2] = useState(false);
+  const [filterSearch, setFilterSearch] = useState<any>([]);
 
   const { data, setData, post, progress, processing, errors } = useForm({
-    codigo: tenant.tenant ? tenant.tenant + 1 : 1,
-    descricao: "",
-    endereco: "",
-    numero: "",
-    cep: "",
-    municipio: "",
-    uf: "",
-    bairro: "",
-    cnpj: "",
-    inscricao: "",
-    telefone: "",
-    whatsapp: "",
-    obs: "",
+    tenant_id: "",
+    cliente: "",
+    name: "",
+    email: "",
+    password: "",
+    roles: "",
+    status: "",
+    password_confirmation: "",
   });
 
   function handleSubmit(e: any) {
     e.preventDefault();
-    post(route("customers.store"));
+    post(route("users.store"));
   }
 
+  const handleSearch = (value: any) => {
+    const client = value.toLowerCase();
+    const result = tenants?.tenants?.filter((cl: any) => (cl.descricao.toLowerCase().includes(client)));
+    setFilterSearch(result);
+  };
 
-  const getCep = (cep: string) => {
-    const cleanCep = unMask(cep);
-    fetch(`https://viacep.com.br/ws/${cleanCep}/json/`)
-      .then((response) => response.json())
-      .then((result) => {
-        setData((data) => ({ ...data, uf: result.uf }));
-        setData((data) => ({ ...data, municipio: result.localidade }));
-        setData((data) => ({ ...data, bairro: result.bairro }));
-        setData((data) => ({ ...data, endereco: result.logradouro }));
-      })
-      .catch((error) => console.error(error));
+  useEffect(() => {
+    const filter = data.cliente;
+    if (filter === "") {
+      setFilterSearch([]);
+    }
+  }, [data]);
+
+  const handleChangeCustomer = (id: any, nome: any) => {
+    setData((data) => ({ ...data, tenant_id: id }));
+    setData((data) => ({ ...data, cliente: nome }));
+    setFilterSearch([]);
+
   };
 
   return (
@@ -51,19 +57,19 @@ const addUser = (tenant: any) => {
           <HeaderContent>
             <TitleTop>
               <IoPeopleSharp size={30} />
-              <span className="ml-2">Clientes</span>
+              <span className="ml-2">Usuários</span>
             </TitleTop>
             <BreadCrumbTop
               links={[
-                { url: "/customers", label: "Clientes" },
-                { url: null, label: "Adicionar cliente" },
+                { url: "/users", label: "Usuários" },
+                { url: null, label: "Adicionar usuário" },
               ]}
             />
           </HeaderContent>
           <CardContainer>
             <CardHeader>
               <CardHeaderContent>
-                <BackButton url={"/customers"} label={"Voltar"} />
+                <BackButton url={"/users"} label={"Voltar"} />
               </CardHeaderContent>
               <CardHeaderContent>
                 <></>
@@ -72,69 +78,58 @@ const addUser = (tenant: any) => {
             <form onSubmit={handleSubmit} autoComplete="off">
               <CardBody className=" border-y border-gray-100">
                 <div className="px-3 my-4">
-                  <div className="grid md:grid-cols-6 gap-4">
-                    <div className="flex flex-col">
-                      <label
-                        className="label-form"
-                        htmlFor="codigo"
-                      >
-                        Código
-                      </label>
-                      <input
-                        id="codigo"
-                        type="text"
-                        value={("00000" + (data.codigo)).slice(-8)}
-                        className="input-form"
-                        disabled
-                      />
-                    </div>
 
-                    <div className="flex flex-col col-span-2">
+                  <div className="grid grid-cols-6 gap-4">
+                    <div className="flex flex-col col-span-2 relative">
                       <label
                         className="label-form"
-                        htmlFor="descricao"
+                        htmlFor="Cliente"
                       >
-                        Descrição
+                        Cliente
                       </label>
                       <input
-                        id="descricao"
                         type="text"
-                        value={data.descricao}
+                        value={data.tenant_id}
                         onChange={(e) =>
-                          setData("descricao", e.target.value)
+                          setData(
+                            "tenant_id",
+                            e.target.value,
+                          )
                         }
+                        className="hidden"
+                      />
+                      <input
+                        id="cliente"
+                        type="text"
+                        value={data.cliente}
+                        onChange={(e) => {
+                          setData(
+                            "cliente",
+                            e.target.value,
+                          )
+                          handleSearch(e.target.value)
+                        }}
                         className="input-form"
                       />
-                      {errors.descricao && (
-                        <div className="text-sm text-red-500">
-                          {errors.descricao}
+                      {filterSearch.length > 0 &&
+                        <div className="absolute bg-gray-50 border-2 border-white shadow-md w-full rounded-sm top-16 max-h-52 overflow-y-auto">
+                          <ul className="p-1">
+                            {filterSearch.map((tenant: any, idx: number) => (
+                              <li key={idx} className={`flex items-center justify-normal ${idx < (filterSearch.length - 1) ? 'border-b border-gray-200' : ''}`}>
+                                <div
+                                  className="text-sm text-gray-600 p-1 cursor-pointer inline-block w-full"
+                                  onClick={() => handleChangeCustomer(tenant.id, tenant.descricao)}
+                                >
+                                  {tenant.descricao}
+                                </div>
+                              </li>
+                            ))}
+                          </ul>
                         </div>
-                      )}
-                    </div>
-
-                    <div className="flex flex-col">
-                      <label
-                        className="label-form"
-                        htmlFor="cep"
-                      >
-                        CEP
-                      </label>
-                      <input
-                        id="cep"
-                        type="text"
-                        value={maskCep(data.cep)}
-                        onChange={(e) =>
-                          setData("cep", e.target.value)
-                        }
-                        onBlur={(e) =>
-                          getCep(e.target.value)
-                        }
-                        className="input-form"
-                        maxLength={9}
-                      />
-                      {errors.cep && (
+                      }
+                      {errors.tenant_id && (
                         <div className="text-sm text-red-500">
-                          {errors.cep}
+                          {errors.tenant_id}
                         </div>
                       )}
                     </div>
@@ -142,75 +137,94 @@ const addUser = (tenant: any) => {
                     <div className="flex flex-col col-span-2">
                       <label
                         className="label-form"
-                        htmlFor="endereco"
+                        htmlFor="nome"
                       >
-                        Endereço
+                        Nome
                       </label>
                       <input
-                        id="endereco"
+                        id="name"
                         type="text"
-                        value={data.endereco}
+                        value={data.name}
                         onChange={(e) =>
-                          setData("endereco", e.target.value)
+                          setData("name", e.target.value)
                         }
                         className="input-form"
                       />
-                      {errors.endereco && (
+                      {errors.name && (
+                        <div className="text-sm text-red-500">
+                          {errors.name}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex flex-col col-span-2">
+                      <label
+                        className="label-form"
+                        htmlFor="email"
+                      >
+                        E-mail
+                      </label>
+                      <input
+                        id="email"
+                        type="text"
+                        value={data.email}
+                        onChange={(e) =>
+                          setData("email", e.target.value)
+                        }
+                        className="input-form"
+                      />
+                      {errors.email && (
                         <div className="text-red-500">
-                          {errors.endereco}
+                          {errors.email}
                         </div>
                       )}
                     </div>
-
 
                   </div>
 
-                  <div className="grid grid-cols-6 gap-4 mt-6">
+                  <div className="grid grid-cols-2 gap-4 mt-6">
                     <div className="flex flex-col">
                       <label
                         className="label-form"
-                        htmlFor="numero"
+                        htmlFor="password"
                       >
-                        Número
+                        Senha
                       </label>
-                      <input
-                        id="numero"
-                        type="text"
-                        value={data.numero}
-                        onChange={(e) =>
-                          setData("numero", e.target.value)
-                        }
-                        className="input-form"
-                      />
-                      {errors.numero && (
-                        <div className="text-sm text-red-500">
-                          {errors.numero}
+                      <div className="flex items-center justify-between relative">
+                        <input
+                          id="password"
+                          type={
+                            showPassword
+                              ? "text"
+                              : "password"
+                          }
+                          value={data.password}
+                          onChange={(e) =>
+                            setData(
+                              "password",
+                              e.target.value,
+                            )
+                          }
+                          className="input-form w-full"
+                        />
+                        <div
+                          className="absolute right-2 cursor-pointer text-gray-500"
+                          onClick={() =>
+                            setShowPassword(
+                              (state) => !state,
+                            )
+                          }
+                        >
+                          {showPassword ? (
+                            <IoEyeOff size={24} />
+                          ) : (
+                            <IoEye size={24} />
+                          )}
                         </div>
-                      )}
-                    </div>
-
-                    <div className="flex flex-col col-span-2">
-                      <label
-                        className="label-form"
-                        htmlFor="municipio"
-                      >
-                        Municipio
-                      </label>
-                      <input
-                        id="municipio"
-                        type="text"
-                        value={data.municipio}
-                        onChange={(e) =>
-                          setData(
-                            "municipio",
-                            e.target.value,
-                          )
-                        }
-                        className="input-form"
-                      />
-                      {errors.municipio && (
+                      </div>
+                      {errors.password && (
                         <div className="text-sm text-red-500">
-                          {errors.municipio}
+                          {errors.password}
                         </div>
                       )}
                     </div>
@@ -218,169 +232,121 @@ const addUser = (tenant: any) => {
                     <div className="flex flex-col">
                       <label
                         className="label-form"
-                        htmlFor="uf"
+                        htmlFor="password_confirmation"
                       >
-                        UF
+                        Repita a senha
                       </label>
-                      <input
-                        id="uf"
-                        type="text"
-                        value={data.uf}
-                        onChange={(e) =>
-                          setData("uf", e.target.value)
-                        }
-                        className="input-form"
-                      />
-                      {errors.uf && (
-                        <div className="text-sm text-red-500">
-                          {errors.uf}
+                      <div className="flex items-center justify-between relative">
+                        <input
+                          id="password_confirmation"
+                          type={
+                            showPassword2
+                              ? "text"
+                              : "password"
+                          }
+                          value={
+                            data.password_confirmation
+                          }
+                          onChange={(e) =>
+                            setData(
+                              "password_confirmation",
+                              e.target.value,
+                            )
+                          }
+                          className="input-form w-full"
+                        />
+                        <div
+                          className="absolute right-2 cursor-pointer text-gray-500"
+                          onClick={() =>
+                            setShowPassword2(
+                              (state) => !state,
+                            )
+                          }
+                        >
+                          {showPassword2 ? (
+                            <IoEyeOff size={24} />
+                          ) : (
+                            <IoEye size={24} />
+                          )}
                         </div>
-                      )}
-                    </div>
-
-                    <div className="flex flex-col col-span-2">
-                      <label
-                        className="label-form"
-                        htmlFor="bairro"
-                      >
-                        Bairro
-                      </label>
-                      <input
-                        id="bairro"
-                        type="text"
-                        value={data.bairro}
-                        onChange={(e) =>
-                          setData(
-                            "bairro",
-                            e.target.value,
-                          )
-                        }
-                        className="input-form"
-                      />
-                      {errors.bairro && (
-                        <div className="text-sm text-red-500">
-                          {errors.bairro}
+                      </div>
+                      {errors.password_confirmation && (
+                        <div className="text-red-500">
+                          {errors.password_confirmation}
                         </div>
                       )}
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-4 gap-4 mt-6">
+                  <div className="grid grid-cols-2 gap-4 mt-6">
                     <div className="flex flex-col">
                       <label
                         className="label-form"
-                        htmlFor="cnpj"
+                        htmlFor="roles"
                       >
-                        CNPJ
+                        Função
                       </label>
-                      <input
-                        id="cnpj"
-                        type="text"
-                        value={maskCpfCnpj(data.cnpj)}
+                      <select
+                        id="roles"
+                        value={data.roles}
                         onChange={(e) =>
-                          setData("cnpj", e.target.value)
+                          setData("roles", e.target.value)
                         }
                         className="input-form"
-                        maxLength={18}
-                      />
-                      {errors.cnpj && (
+                      >
+                        <option value="">
+                          Selecione a função
+                        </option>
+                        {roleUser.map((role: any) => (
+                          <option
+                            key={role?.value}
+                            value={role?.value}
+                          >
+                            {role?.label}
+                          </option>
+                        ))}
+                      </select>
+                      {errors.roles && (
                         <div className="text-sm text-red-500">
-                          {errors.cnpj}
+                          {errors.roles}
                         </div>
                       )}
                     </div>
                     <div className="flex flex-col">
                       <label
                         className="label-form"
-                        htmlFor="inscricao"
+                        htmlFor="status"
                       >
-                        Inscrição
+                        Status
                       </label>
-                      <input
-                        id="inscricao"
-                        type="text"
-                        value={maskInscEstadual(data.inscricao)}
+                      <select
+                        id="status"
+                        value={data.status}
                         onChange={(e) =>
                           setData(
-                            "inscricao",
+                            "status",
                             e.target.value,
                           )
                         }
                         className="input-form"
-                        maxLength={10}
-                      />
-                      {errors.inscricao && (
-                        <div className="text-sm text-red-500">
-                          {errors.inscricao}
+                      >
+                        <option value="">
+                          Selecione o status
+                        </option>
+                        {statusUser.map((stat: any) => (
+                          <option
+                            key={stat?.value}
+                            value={stat?.value}
+                          >
+                            {stat?.label}
+                          </option>
+                        ))}
+                      </select>
+                      {errors.status && (
+                        <div className="text-red-500">
+                          {errors.status}
                         </div>
                       )}
-                    </div>
-
-                    <div className="flex flex-col">
-                      <label
-                        className="label-form"
-                        htmlFor="telefone"
-                      >
-                        Telefone
-                      </label>
-                      <input
-                        id="telefone"
-                        type="text"
-                        value={maskPhone(data.telefone)}
-                        onChange={(e) =>
-                          setData(
-                            "telefone",
-                            e.target.value,
-                          )
-                        }
-                        className="input-form"
-                        maxLength={15}
-                      />
-                      {errors.telefone && (
-                        <div className="text-sm text-red-500">
-                          {errors.telefone}
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex flex-col">
-                      <label
-                        className="label-form"
-                        htmlFor="whatsapp"
-                      >12345678
-                        Whatsapp(Ex.: 5551985471163)
-                      </label>
-                      <input
-                        id="whatsapp"
-                        type="text"
-                        value={data.whatsapp}
-                        onChange={(e) =>
-                          setData(
-                            "whatsapp",
-                            e.target.value,
-                          )
-                        }
-                        className="input-form"
-                        maxLength={13}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="mt-6">
-                    <div className="flex flex-col">
-                      <label
-                        className="label-form"
-                        htmlFor="obs"
-                      >
-                        Observação
-                      </label>
-                      <textarea
-                        id="obs"
-                        value={data.obs}
-                        onChange={(e) =>
-                          setData("obs", e.target.value)
-                        }
-                        className="input-form"
-                      />
                     </div>
                   </div>
                 </div>
