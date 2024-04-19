@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { IoCaretForward, IoChevronForward, IoCog, IoHome, IoPeople } from "react-icons/io5";
+import { IoCaretForward, IoChevronForward, IoCog, IoHome, IoPeople, IoPerson } from "react-icons/io5";
 import React, { useState } from 'react'
 import SideLink from '../SideLink';
 import { LiaCashRegisterSolid } from 'react-icons/lia';
@@ -77,15 +77,6 @@ const SideBar = () => {
                                         className='block hover:underline origin-left text-base'
                                         href="/empresa"
                                     >
-                                        Usuários
-                                    </Link>
-                                </li>
-                                <li className='w-full py-2 flex items-center '>
-                                    <MdOutlineKeyboardArrowRight size={20} />
-                                    <Link
-                                        className='block hover:underline origin-left text-base'
-                                        href="/empresa"
-                                    >
                                         Aparência
                                     </Link>
                                 </li>
@@ -94,6 +85,13 @@ const SideBar = () => {
                     }
 
                 </li>
+                <SideLink
+                    url={route('users.index')}
+                    icon={<IoPerson size={22} />}
+                    openSide={openSide}
+                    active={route().current('users.index')}
+                    label="Usuários"
+                />
             </ul>
         </aside>
     )
