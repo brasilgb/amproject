@@ -27,24 +27,24 @@ const SideBar = () => {
                 </div>
 
             </div>
-            <ul className='mt-4 flex flex-col gap-4'>
+            <ul className='mt-4 flex flex-col gap-2'>
                 <SideLink
                     url={route('dashboard')}
-                    icon={<IoHome size={22} />}
+                    icon={<IoHome size={24} />}
                     openSide={openSide}
                     active={route().current('dashboard')}
                     label="Dashboard"
                 />
                 <SideLink
                     url={route('customers.index')}
-                    icon={<IoPeople size={22} />}
+                    icon={<IoPeople size={24} />}
                     openSide={openSide}
                     active={route().current('customers.index')}
                     label="Clientes"
                 />
                 <SideLink
                     url={route('sales')}
-                    icon={<GiReceiveMoney size={22} />}
+                    icon={<GiReceiveMoney size={24} />}
                     openSide={openSide}
                     active={route().current('sales')}
                     label="Vendas"
@@ -52,11 +52,11 @@ const SideBar = () => {
                 <li className="">
                     <div className={`flex items-center p-2 text-base font-medium gap-2 rounded-t-md w-full cursor-pointer hover:rounded-t-md  ${dropdowOpen ? "bg-white text-gray-700 border-b" : "text-white"}`} onClick={() => setDropdowOpen(!dropdowOpen)}>
                         <div>
-                            <IoCog size={22} />
+                            <IoCog size={24} />
                         </div>
                         <div className={`flex-1 witespace-pre duration-500 ${!openSide && "hidden"}`}>Configurações</div>
                         <div className={`witespace-pre duration-500 ${!openSide && "hidden"}`}>
-                            <MdOutlineKeyboardArrowDown size={22} className={`duration-300 ${!dropdowOpen ? '-rotate-180' : 'rotate-0'}`} />
+                            <MdOutlineKeyboardArrowDown size={24} className={`duration-300 ${!dropdowOpen ? '-rotate-180' : 'rotate-0'}`} />
                         </div>
                     </div>
                     {dropdowOpen &&
@@ -87,7 +87,7 @@ const SideBar = () => {
                 </li>
                 <SideLink
                     url={route('users.index')}
-                    icon={<IoPerson size={22} />}
+                    icon={<IoPerson size={24} />}
                     openSide={openSide}
                     active={route().current('users.index')}
                     label="Usuários"

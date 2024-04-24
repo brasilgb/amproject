@@ -13,7 +13,7 @@ const addUser = (tenants: any) => {
   const [showPassword2, setShowPassword2] = useState(false);
   const [filterSearch, setFilterSearch] = useState<any>([]);
 
-  const { data, setData, post, progress, processing, errors } = useForm({
+  const { data, setData, post, processing, errors } = useForm({
     tenant_id: "",
     cliente: "",
     name: "",
@@ -112,7 +112,7 @@ const addUser = (tenants: any) => {
                         className="input-form"
                       />
                       {filterSearch.length > 0 &&
-                        <div className="absolute bg-gray-50 border-2 border-white shadow-md w-full rounded-sm top-16 max-h-52 overflow-y-auto">
+                        <div className="absolute z-20 bg-gray-50 border-2 border-white shadow-md w-full rounded-sm top-16 max-h-52 overflow-y-auto">
                           <ul className="p-1">
                             {filterSearch.map((tenant: any, idx: number) => (
                               <li key={idx} className={`flex items-center justify-normal ${idx < (filterSearch.length - 1) ? 'border-b border-gray-200' : ''}`}>

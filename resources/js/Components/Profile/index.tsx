@@ -6,7 +6,6 @@ import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
 
 const Profile = () => {
     const { auth } = usePage().props as any;
-    console.log(auth?.user?.name);
     
     const [isOpen, setIsOpen] = useState<boolean>(false);
 

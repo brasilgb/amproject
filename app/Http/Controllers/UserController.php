@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 
@@ -46,7 +47,6 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
-        // dd($data);
         $messages = [
             'required' => 'O campo :attribute deve ser preenchido',
             'email' => 'Endereço de e-mail inválido',
@@ -83,25 +83,57 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(User $user)
     {
-        //
+        return Inertia::render('User/editUser', ['user' => $user]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(User $user)
     {
-        //
+        return Redirect::route('users.show', ['user' => $user->id]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, User $user)
     {
-        //
+        $data = $request->all();
+        $messages = [
+            'required' => 'O campo :attribute deve ser preenchido',
+            'email' => 'Endereço de e-mail inválido',
+            "unique" => 'E-mail já cadastrado',
+            'confirmed' => 'As senhas não correspondem',
+            'min' => 'As senha deve ter no mínimo :min caracteres',
+        ];
+        $request->validate(
+            [
+                'tenant_id' => 'required',
+                'name' => 'required',
+                // 'email' => 'required|email|unique:users',
+                'email' => ['required', Rule::unique('users')->ignore($user->id), 'email'],
+                'roles' => 'required',
+                'status' => 'required',
+                'password' => ['nullable', 'min:6', 'confirmed', Rules\Password::defaults()],
+                'password_confirmation' => ['nullable', 'min:6'],
+            ],
+            $messages,
+            [
+                'tenant_id' => 'cliente',
+                'name' => 'nome',
+                'password' => 'senha',
+                'password_confirmation' => 'repetir a senha',
+                'email' => 'e-mail',
+                'roles' => 'função',
+            ]
+        );
+        $data['password'] = $request->password ? Hash::make($request->password) : $user->password;
+        $user->update($data);
+        Session::flash('success', 'Usuário cadastrado com sucesso!');
+        return Redirect::route('users.show', ['user' => $user->id]);
     }
 
     /**

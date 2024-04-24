@@ -1,14 +1,18 @@
-import { useEffect, FormEventHandler } from 'react';
+import { useEffect, FormEventHandler, useState } from 'react';
 import Checkbox from '@/Components/Checkbox';
 import GuestLayout from '@/Layouts/GuestLayout';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import TextInput from '@/Components/TextInput';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import ApplicationLogo from '@/Components/ApplicationLogo';
 import AuthButton from '@/Components/AuthButton';
+import { IoEye, IoEyeOff } from 'react-icons/io5';
 
-export default function Login({ status, canResetPassword }: { status?: string, canResetPassword: boolean }) {
+export default function Login() {
+    const { user } = usePage().props as any;
+    const [showPassword, setShowPassword] = useState(false);
+
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',
@@ -29,8 +33,19 @@ export default function Login({ status, canResetPassword }: { status?: string, c
 
     return (
         <GuestLayout>
-            <Head title="Log in" />
-
+            <Head title="Login" />
+            {!user?.exists &&
+                <div
+                    className='w-10/12 md:w-1/4 flex flex-col items-center justify-center bg-white mb-4 shadow-sm rounded py-4'>
+                    <h1 className=' text-red-500 mb-4 font-bold uppercase'>Não há usuários cadastrados</h1>
+                    <Link
+                        className='bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded shadow-sm duration-300 font-bold'
+                        href={route('register')}
+                    >
+                        Cadastrar usuário administrador
+                    </Link>
+                </div>
+            }
             <div className="w-10/12 md:w-1/4 p-4 bg-white shadow-sm overflow-hidden rounded">
                 <div className='flex items-center justify-center py-8'>
                     <Link href="/">
@@ -40,8 +55,7 @@ export default function Login({ status, canResetPassword }: { status?: string, c
 
                 <form onSubmit={submit}>
                     <div>
-                        <InputLabel htmlFor="email" value="Email" />
-
+                        <label className='label-form' htmlFor="email">E-mail</label>
                         <TextInput
                             id="email"
                             type="email"
@@ -57,18 +71,35 @@ export default function Login({ status, canResetPassword }: { status?: string, c
                     </div>
 
                     <div className="mt-4">
-                        <InputLabel htmlFor="password" value="Password" />
-
-                        <TextInput
-                            id="password"
-                            type="password"
-                            name="password"
-                            value={data.password}
-                            className="mt-1 block w-full"
-                            autoComplete="current-password"
-                            onChange={(e) => setData('password', e.target.value)}
-                        />
-
+                        <label className='label-form' htmlFor="email">Senha</label>
+                        <div className="flex items-center justify-between relative">
+                            <TextInput
+                                id="password"
+                                type={
+                                    showPassword
+                                        ? "text"
+                                        : "password"
+                                } name="password"
+                                value={data.password}
+                                className="mt-1 block w-full"
+                                autoComplete="current-password"
+                                onChange={(e) => setData('password', e.target.value)}
+                            />
+                            <div
+                                className="absolute right-2 cursor-pointer text-gray-500"
+                                onClick={() =>
+                                    setShowPassword(
+                                        (state) => !state,
+                                    )
+                                }
+                            >
+                                {showPassword ? (
+                                    <IoEyeOff size={24} />
+                                ) : (
+                                    <IoEye size={24} />
+                                )}
+                            </div>
+                        </div>
                         <InputError message={errors.password} className="mt-2" />
                     </div>
 

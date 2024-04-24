@@ -15,7 +15,7 @@ const SideLink = (props: LinkProps) => {
                 ${props.active ? "bg-white text-gray-800" : "text-white"}`}
                 href={props.url}
             >
-                <div>
+                <div className={`${!props.openSide && 'py-0'}`}>
                     {props.icon}
                 </div>
                 <div className={`${!props.openSide && "hidden"} origin-left duration-300`}>{props.label}</div>
