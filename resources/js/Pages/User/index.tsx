@@ -49,6 +49,7 @@ const User = ({ users }: any) => {
                                 <TableHeader>
                                     <TableRow>
                                         <TableHead>#</TableHead>
+                                        <TableHead>Empresa</TableHead>
                                         <TableHead>Nome</TableHead>
                                         <TableHead>E-mail</TableHead>
                                         <TableHead>Papel</TableHead>
@@ -58,34 +59,37 @@ const User = ({ users }: any) => {
                                 </TableHeader>
                                 <TableBody>
                                     {users.data.map((user: any) => (
-                                        <Fragment key={user.id}>
+                                        <Fragment key={user?.id}>
                                             <TableRow>
-                                                <TableCell>{user.id}</TableCell>
+                                                <TableCell>{user?.id}</TableCell>
                                                 <TableCell>
-                                                    {user.name}
+                                                    {user?.tenant?.descricao}
                                                 </TableCell>
                                                 <TableCell>
-                                                    {user.email}
+                                                    {user?.name}
                                                 </TableCell>
                                                 <TableCell>
-                                                    {roleUserByValue(user.roles)}
+                                                    {user?.email}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {roleUserByValue(user?.roles)}
                                                 </TableCell>
                                                 <TableCell>
                                                     {moment(
-                                                        user.created_at,
+                                                        user?.created_at,
                                                     ).format("DD/MM/YYYY")}
                                                 </TableCell>
                                                 <TableCell className="flex items-center justify-end gap-2">
                                                     <EditButton
                                                         url={route(
                                                             "users.edit",
-                                                            user.id,
+                                                            user?.id,
                                                         )}
                                                     />
                                                     <DeleteButton
                                                         url="users.destroy"
-                                                        param={user.id}
-                                                        identify={`o user ${user.name}`}
+                                                        param={user?.id}
+                                                        identify={`o user ${user?.name}`}
                                                     />
                                                 </TableCell>
                                             </TableRow>

@@ -7,30 +7,23 @@ import { Head, useForm } from '@inertiajs/react'
 import { useEffect, useState } from "react"
 import { IoEye, IoEyeOff, IoPeopleSharp } from 'react-icons/io5'
 
-const editUser = (user: any) => {
+const editUser = ({user}: any) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
-
   const { data, setData, put, reset, processing, errors } = useForm({
-    tenant_id: "",
-    cliente: user.user.tenant_id ? user.user.tenant_id : 'null',
-    name: user.user.name,
-    email: user.user.email,
+    tenant_id: user.tenant_id,
+    cliente: user.tenant?.descricao,
+    name: user.name,
+    email: user.email,
     password: "",
-    roles: user.user.roles,
-    status: user.user.status,
+    roles: user.roles,
+    status: user.status,
     password_confirmation: "",
   });
 
-  useEffect(() => {
-    return () => {
-        reset('password', 'password_confirmation');
-    };
-}, [reset]);
-
   function handleSubmit(e: any) {
     e.preventDefault();
-    put(route("users.update", user.user.id));
+    put(route("users.update", user.id));
   }
 
   return (
@@ -62,7 +55,6 @@ const editUser = (user: any) => {
             <form onSubmit={handleSubmit} autoComplete="off">
               <CardBody className=" border-y border-gray-100">
                 <div className="px-3 my-4">
-{JSON.stringify(user.user)}
                   <div className="grid grid-cols-6 gap-4">
                     <div className="flex flex-col col-span-2 relative">
                       <label
@@ -93,6 +85,7 @@ const editUser = (user: any) => {
                           )
                         }}
                         className="input-form"
+                        readOnly
                       />
                       {errors.tenant_id && (
                         <div className="text-sm text-red-500">
@@ -255,7 +248,7 @@ const editUser = (user: any) => {
                       </label>
                       <select
                         id="roles"
-                        defaultValue={user.user.roles}
+                        defaultValue={user.roles}
                         value={data.roles}
                         onChange={(e) =>
                           setData("roles", e.target.value)

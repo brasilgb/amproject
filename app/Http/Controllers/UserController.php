@@ -21,7 +21,7 @@ class UserController extends Controller
     {
         $search = $request->get('q');
 
-        $query = User::orderBy('id', 'DESC');
+        $query = User::with('tenant')->orderBy('id', 'DESC');
 
         if ($search) {
             $query->where('name', 'like', '%' . $search . '%');
@@ -85,7 +85,9 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return Inertia::render('User/editUser', ['user' => $user]);
+        $wt = User::where('id', $user->id)->with('tenant')->first();
+        // dd($wt);
+        return Inertia::render('User/editUser', ['user' => $wt]);
     }
 
     /**

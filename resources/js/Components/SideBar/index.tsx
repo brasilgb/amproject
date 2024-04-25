@@ -1,4 +1,4 @@
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { IoCaretForward, IoChevronForward, IoCog, IoHome, IoPeople, IoPerson } from "react-icons/io5";
 import React, { useState } from 'react'
 import SideLink from '../SideLink';
@@ -8,6 +8,9 @@ import ApplicationLogo from '../ApplicationLogo';
 import { MdOutlineKeyboardArrowDown, MdOutlineKeyboardArrowRight } from "react-icons/md";
 
 const SideBar = () => {
+    const { auth } = usePage().props as any;
+    console.log(auth?.user?.tenant_id);
+
     const [openSide, setOpenSide] = useState(true);
     const [dropdowOpen, setDropdowOpen] = useState(false);
     return (
@@ -35,13 +38,16 @@ const SideBar = () => {
                     active={route().current('dashboard')}
                     label="Dashboard"
                 />
-                <SideLink
-                    url={route('customers.index')}
-                    icon={<IoPeople size={24} />}
-                    openSide={openSide}
-                    active={route().current('customers.index')}
-                    label="Clientes"
-                />
+                {auth?.user?.tenant_id === null &&
+                    <SideLink
+                        url={route('customers.index')}
+                        icon={<IoPeople size={24} />}
+                        openSide={openSide}
+                        active={route().current('customers.index')}
+                        label="Clientes"
+                    />
+                }
+
                 <SideLink
                     url={route('sales')}
                     icon={<GiReceiveMoney size={24} />}
