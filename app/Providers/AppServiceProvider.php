@@ -5,15 +5,11 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use App\Listeners\SetTenatIdInSession;
 use Illuminate\Auth\Events\Login;
+use Illuminate\Support\Facades\Event;
 
 class AppServiceProvider extends ServiceProvider
 {
 
-    protected $listen = [
-        Login::class => [
-            SetTenatIdInSession::class
-        ],
-    ];
     /**
      * Register any application services.
      */
@@ -27,6 +23,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Event::listen(
+            Login::class,
+            [
+                SetTenatIdInSession::class
+            ]
+        );
     }
 }

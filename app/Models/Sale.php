@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\Tenantable;
 use App\Traits\TenantAttributeTrait;
 use App\Traits\TenantScoped;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Sale extends Model
 {
-    use HasFactory;
+    use Tenantable;
 
     protected $fillable = [
         "tenant_id",

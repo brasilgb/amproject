@@ -17,8 +17,8 @@ trait Tenantable
         }
     }
 
-    public function tenantstoall()
+    public function tenant()
     {
-        $this->belongsTo(Tenant::class);
+        return $this->belongsTo(Tenant::class);
     }
 }
